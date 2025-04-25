@@ -1,0 +1,1 @@
+#envia mensagens para todos os clientes
