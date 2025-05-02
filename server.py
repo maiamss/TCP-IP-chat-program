@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import socket
 import threading
+import tkinter.filedialog as fd
 
 # Configurações do servidor
 HOST = '0.0.0.0'
@@ -61,10 +62,49 @@ def send_msg():
         add_message(f"Você: {msg}", sender="voce")
         entry.delete(0, "end")
 
+def abrir_janela_emoji():
+    emoji_window = ctk.CTkToplevel(app)
+    emoji_window.title("Emojis")
+    emoji_window.geometry("250x250")
+
+    emojis = ["😁","💻","✅","😎","😍","👨‍🏫","👨‍💻","👩‍💻","❤️"]
+
+    for i, emoji in enumerate(emojis):
+        btn = ctk.CTkButton(master=emoji_window, text=emoji, width=40, command=lambda e=emoji: inserir_emoji(e, emoji_window))
+        btn.grid(row=i // 5, column=i % 5, padx=5, pady=5)
+
+def inserir_emoji(emoji, window):
+    entry.insert("end", emoji)
+    window.destroy()
+
+def enviar_arquivo():
+    file_path = fd.askopenfilename()
+    if file_path:
+        try:
+            with open(file_path, "rb") as f:
+                data = f.read()
+            filename = file_path.split("/")[-1]
+            header = f"FILE:{filename}".encode()
+
+            conn.send(header)
+            conn.send(data)
+
+            add_message(f"Arquivo:{filename}", sender="voce")
+
+        except Exception as e:
+            add_message(f"Erro ao enviar arquivo: {e}", sender="voce")
+
+# Adicionando o binding para a tecla Enter
+entry.bind("<Return>", lambda event: send_msg())
+
+emoji_button = ctk.CTkButton(master=entry_frame, text="💻", width=30,command=abrir_janela_emoji)
+emoji_button.pack(side="left", padx=(0,10))
+
+arquivo_btn = ctk.CTkButton(master=entry_frame, text="📎", width=30, command=enviar_arquivo)
+arquivo_btn.pack(side="left", padx=(0,10))
+
 send_button = ctk.CTkButton(master=entry_frame, text="Enviar", command=send_msg)
 send_button.pack(side="right")
-
-entry.bind("<Return>", lambda event: send_msg())
 
 # Recebimento de mensagens
 def receive_messages():
@@ -73,8 +113,28 @@ def receive_messages():
             data = conn.recv(1024)
             if not data:
                 break
-            add_message(f"Cliente: {data.decode()}", sender="outro")
-        except:
+
+            if data.startswith(b"FILE:"):
+                header = data.decode
+                _, filename, size = header.split(":")
+                size = int(size)
+                file_data = b""
+
+                while len(file_data) < size:
+                    chunk = conn.recv(1024)
+                    if not chunk:
+                        break
+                    file_data += chunk
+                
+                with open(filename, "wb") as f:
+                    f.write(file_data)
+
+                add_message(f"Cliente enviou um arquivo {filename}", sender="outro")
+
+            else: 
+                add_message(f"Cliente: {data.decode()}", sender="outro")
+        except Exception as e:
+            add_message(f"Erro ao receber: {e}", sender="outro")
             break
 
 # Inicializa servidor
@@ -90,4 +150,4 @@ add_message(f"Conectado a: {addr}", sender="outro")
 # Inicia thread de escuta
 threading.Thread(target=receive_messages, daemon=True).start()
 
-app.mainloop()
+app.mainloop() #inicia a janela de conversa
