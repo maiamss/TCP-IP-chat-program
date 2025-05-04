@@ -15,13 +15,15 @@ Aplicativo de chat em Python com interface gráfica para usuários e painel admi
 - Python 3.8+
 - Bibliotecas  (Tkinter, socket, threading)
 
-## Como executar este projetoClone este repositório:
+## Como executar este projeto:
 
-1. ```bash
-   git clone https://github.com/maiamss/TCP-IP-chat-program.git
-   cd TCP-IP-chat-program
-   ```
-2. Inicie o servidor:
+1. Clone este repositório:
+
+```bash
+git clone https://github.com/maiamss/TCP-IP-chat-program.git
+```
+
+1. Inicie o servidor:
 
    ```
    python3 -m server.server
