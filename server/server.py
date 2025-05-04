@@ -1,6 +1,9 @@
-
-from shared.configs import HOST, PORT, BUFFER_SIZE, ENCODING
 import socket, threading
+
+HOST = 'localhost'
+PORT = 12345
+BUFFER_SIZE = 1024
+ENCODING = 'utf-8'
 
 clients = []
 usernames = {}
@@ -23,7 +26,7 @@ def handle_client(client):
         username = client.recv(BUFFER_SIZE).decode(ENCODING)
         usernames[client] = username
         clients.append(client)
-        broadcast(f"{username} has joined the chat!".encode(ENCODING))
+        broadcast(f"{username} entrou no chat!".encode(ENCODING))
 
         while True:
             message = client.recv(BUFFER_SIZE).decode(ENCODING)
