@@ -1,4 +1,4 @@
-Chat App com Painel Admin
+# Chat App com Painel Admin
 
 Aplicativo de chat em Python com interface gráfica para usuários e painel administrativo.
 
