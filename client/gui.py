@@ -4,18 +4,17 @@ import re
 from client.client import ChatClient
 
 TYPING_TIMER = None
-TYPING_STATE = False  # Adicionado para controlar o estado
+TYPING_STATE = False
 client = None
 username = None
 
 def on_receive(message):
-    # Mostra apenas mensagens de digitação de outros usuários
+
     if "está digitando..." in message and not message.startswith(username):
         typing_status_label.config(text=message)
     elif "parou de digitar." in message and not message.startswith(username):
         typing_status_label.config(text="")
     else:
-        # Ignora mensagens de digitação do próprio usuário
         if not ("está digitando..." in message and message.startswith(username)) and \
            not ("parou de digitar." in message and message.startswith(username)):
             chat_box.config(state=tk.NORMAL)
@@ -90,21 +89,21 @@ configure_styles()
 header_frame = ttk.Frame(root, style='TFrame', padding="10")
 header_frame.pack(fill=tk.X)
 
-title_label = ttk.Label(header_frame, 
-                       text=f"Painel do Inspetor(a)", 
+title_label = ttk.Label(header_frame,
+                       text=f"Painel do Inspetor(a)",
                        font=('Segoe UI', 16, 'bold'),
                        style='TLabel')
 title_label.pack(side=tk.LEFT)
 
-user_label = ttk.Label(header_frame, 
-                      text=f"Usuário: {username}", 
+user_label = ttk.Label(header_frame,
+                      text=f"Usuário: {username}",
                       font=('Segoe UI', 10),
                       style='TLabel')
 user_label.pack(side=tk.RIGHT)
 
-typing_status_label = ttk.Label(root, 
-                               text="", 
-                               foreground="#689F38", 
+typing_status_label = ttk.Label(root,
+                               text="",
+                               foreground="#689F38",
                                font=('Segoe UI', 9, 'italic'),
                                style='TLabel')
 typing_status_label.pack(anchor=tk.W, padx=15)
@@ -113,11 +112,11 @@ chat_frame = ttk.Frame(root, style='TFrame')
 chat_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
 chat_box = scrolledtext.ScrolledText(
-    chat_frame, 
-    height=20, 
-    width=70, 
+    chat_frame,
+    height=20,
+    width=70,
     state=tk.DISABLED,
-    wrap=tk.WORD, 
+    wrap=tk.WORD,
     font=('Segoe UI', 10),
     bg='white',
     fg='#1B5E20',
@@ -138,9 +137,9 @@ input_frame.pack(fill=tk.X)
 
 message_entry = tk.StringVar()
 entry_field = ttk.Entry(
-    input_frame, 
-    textvariable=message_entry, 
-    width=50, 
+    input_frame,
+    textvariable=message_entry,
+    width=50,
     style='TEntry'
 )
 entry_field.bind("<Return>", send_message)
@@ -148,9 +147,9 @@ entry_field.bind("<KeyPress>", on_typing)
 entry_field.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
 
 send_button = ttk.Button(
-    input_frame, 
-    text="Enviar", 
-    command=send_message, 
+    input_frame,
+    text="Enviar",
+    command=send_message,
     style='TButton'
 )
 send_button.pack(side=tk.RIGHT, padx=10)
@@ -158,8 +157,8 @@ send_button.pack(side=tk.RIGHT, padx=10)
 footer_frame = ttk.Frame(root, style='TFrame')
 footer_frame.pack(fill=tk.X, padx=10, pady=10)
 ttk.Label(
-    footer_frame, 
-    text="Secretaria de Estado do Meio Ambiente © 2025", 
+    footer_frame,
+    text="Secretaria de Estado do Meio Ambiente © 2025",
     style='TLabel',
     font=('Segoe UI', 8)
 ).pack(side=tk.RIGHT)

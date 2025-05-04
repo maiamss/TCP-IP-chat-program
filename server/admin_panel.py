@@ -32,7 +32,6 @@ class AdminClient:
             self.socket.close()
             self.running = False
 
-# === GUI Logic ===
 def send_message():
     msg = message_entry.get()
     user = user_entry.get().strip()
@@ -41,7 +40,7 @@ def send_message():
     if user:
         display_msg = f"[PRIVADO] para {user}: {msg}"
         client.send(f"/admin:msg {user} {msg}")
-        on_receive(display_msg)  
+        on_receive(display_msg)
     else:
         client.send(f"[ADMIN]: {msg}")
     message_entry.set("")
@@ -69,20 +68,19 @@ def on_receive(msg):
 def check_single_instance():
     lock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        lock_socket.bind(('127.0.0.1', 65432)) 
+        lock_socket.bind(('127.0.0.1', 65432))
     except socket.error:
         messagebox.showerror("Erro", "Já existe um painel admin aberto.")
         sys.exit()
     return lock_socket
 
-# === Style Configuration ===
 def configure_styles():
     style = ttk.Style()
     style.theme_use('clam')
 
     style.configure('.', background='#E8F5E9', foreground='#1B5E20', font=('Segoe UI', 10))
 
-    style.configure('TButton', background='#4CAF50', foreground='white', 
+    style.configure('TButton', background='#4CAF50', foreground='white',
                    borderwidth=1, focusthickness=3, focuscolor='#4CAF50',
                    font=('Segoe UI', 10, 'bold'))
     style.map('TButton',
@@ -90,7 +88,7 @@ def configure_styles():
               foreground=[('active', 'white'), ('pressed', 'white')])
 
 
-    style.configure('TEntry', fieldbackground='white', borderwidth=1, 
+    style.configure('TEntry', fieldbackground='white', borderwidth=1,
                    relief='solid', padding=5)
 
     style.configure('TLabel', background='#E8F5E9', foreground='#1B5E20')
@@ -110,15 +108,15 @@ configure_styles()
 header_frame = ttk.Frame(root, style='TFrame')
 header_frame.pack(fill=tk.X, padx=10, pady=10)
 
-ttk.Label(header_frame, text="Painel Administrativo", 
+ttk.Label(header_frame, text="Painel Administrativo",
           font=('Segoe UI', 16, 'bold'), style='TLabel').pack(side=tk.LEFT)
 
 chat_frame = ttk.Frame(root, style='TFrame')
 chat_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
 chat_box = scrolledtext.ScrolledText(
-    chat_frame, 
-    state=tk.DISABLED, 
+    chat_frame,
+    state=tk.DISABLED,
     font=('Segoe UI', 10),
     wrap=tk.WORD,
     bg='white',
@@ -131,9 +129,9 @@ chat_box = scrolledtext.ScrolledText(
 chat_box.pack(fill=tk.BOTH, expand=True)
 
 typing_status_label = ttk.Label(
-    root, 
-    text="", 
-    foreground="#689F38", 
+    root,
+    text="",
+    foreground="#689F38",
     font=('Segoe UI', 9, 'italic'),
     style='TLabel'
 )
@@ -149,8 +147,8 @@ ttk.Label(user_controls, text="Usuário:", style='TLabel').pack(side=tk.LEFT, pa
 
 user_entry = tk.StringVar()
 user_field = ttk.Entry(
-    user_controls, 
-    textvariable=user_entry, 
+    user_controls,
+    textvariable=user_entry,
     width=15,
     style='TEntry'
 )
@@ -158,8 +156,8 @@ user_field.pack(side=tk.LEFT, ipady=5)
 
 message_entry = tk.StringVar()
 entry = ttk.Entry(
-    controls, 
-    textvariable=message_entry, 
+    controls,
+    textvariable=message_entry,
     width=40,
     style='TEntry'
 )
@@ -174,8 +172,8 @@ ttk.Button(button_frame, text="Listar Usuários", command=list_users).pack(side=
 footer_frame = ttk.Frame(root, style='TFrame')
 footer_frame.pack(fill=tk.X, padx=10, pady=10)
 ttk.Label(
-    footer_frame, 
-    text="Secretaria de Estado do Meio Ambiente © 2025", 
+    footer_frame,
+    text="Secretaria de Estado do Meio Ambiente © 2025",
     style='TLabel',
     font=('Segoe UI', 8)
 ).pack(side=tk.RIGHT)

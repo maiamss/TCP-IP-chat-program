@@ -36,7 +36,7 @@ def handle_client(client):
             elif message.startswith("/admin:msg "):
                 _, target, *msg_parts = message.split()
                 msg = " ".join(msg_parts)
-                success = send_private_message(target, f"[PRIVATE] [ADMIN]: {msg}")
+                success = send_private_message(target, f"[PRIVADO] [ADMIN]: {msg}")
                 if not success:
                     client.send(f"[SERVER] Usuário '{target}' não encontrado.".encode(ENCODING))
             else:
