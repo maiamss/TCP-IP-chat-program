@@ -28,7 +28,7 @@ git clone https://github.com/maiamss/TCP-IP-chat-program.git
    ```
    python3 -m server.server
    ```
-3. Inicie o painel admim:
+3. Inicie o painel admin:
 
    ```
    python3 -m server.admin_painel
