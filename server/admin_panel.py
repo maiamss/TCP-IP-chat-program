@@ -23,7 +23,6 @@ class AdminClient:
                 else:
                     self.on_receive_callback(msg)
             except Exception as e:
-                print(f"Erro ao receber mensagem.: {e}")
                 break
 
     def send(self, message):
@@ -42,7 +41,7 @@ def send_message():
     if user:
         display_msg = f"[PRIVATE] para {user}: {msg}"
         client.send(f"/admin:msg {user} {msg}")
-        on_receive(display_msg)  # <- só mostra local se for privado
+        on_receive(display_msg)  
     else:
         client.send(f"[ADMIN]: {msg}")
     message_entry.set("")
@@ -62,7 +61,7 @@ def on_receive(msg):
 def check_single_instance():
     lock_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        lock_socket.bind(('127.0.0.1', 65432))  # Porta exclusiva para o painel
+        lock_socket.bind(('127.0.0.1', 65432)) 
     except socket.error:
         print("Já existe um painel admin aberto.")
         sys.exit()

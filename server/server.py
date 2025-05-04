@@ -7,7 +7,6 @@ usernames = {}
 
 def broadcast(message, sender=None):
     for client in clients:
-        print(f"Enviando para: {usernames.get(client)}") 
         try: client.send(message)
         except: remove_client(client)
 
@@ -24,7 +23,6 @@ def handle_client(client):
         username = client.recv(BUFFER_SIZE).decode(ENCODING)
         usernames[client] = username
         clients.append(client)
-        print(f"Clientes conectados: {[usernames.get(c) for c in clients]}")
         broadcast(f"{username} has joined the chat!".encode(ENCODING))
 
         while True:
