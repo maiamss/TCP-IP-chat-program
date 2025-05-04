@@ -50,11 +50,12 @@ def list_users():
     client.send("/admin:list")
 
 def on_receive(msg):
-    if msg.endswith("está digitando...") or msg.endswith("parou de digitar."):
-        typing_status_label.config(text=msg if "está digitando" in msg else "")
+    if "está digitando..." in msg or "parou de digitar." in msg:
+        # Mostra apenas mensagens de outros usuários, não do admin
+        if not msg.startswith("admin"):
+            typing_status_label.config(text=msg if "está digitando" in msg else "")
         return
     
-    # Destaque para mensagens privadas
     if "[PRIVADO]" in msg:
         chat_box.tag_config('private', foreground='#2E7D32', font=('Segoe UI', 10, 'bold'))
         chat_box.config(state=tk.NORMAL)

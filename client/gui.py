@@ -4,44 +4,62 @@ import re
 from client.client import ChatClient
 
 TYPING_TIMER = None
+TYPING_STATE = False  # Adicionado para controlar o estado
 client = None
 username = None
 
 def on_receive(message):
-    if "typing" in message:
+    # Mostra apenas mensagens de digitação de outros usuários
+    if "está digitando..." in message and not message.startswith(username):
         typing_status_label.config(text=message)
+    elif "parou de digitar." in message and not message.startswith(username):
+        typing_status_label.config(text="")
     else:
-        chat_box.config(state=tk.NORMAL)
-        tag = 'self' if message.startswith(f"Inspetor(a) {username}") else 'other'
-        chat_box.insert(tk.END, message + '\n', tag)
-        chat_box.config(state=tk.DISABLED)
-        chat_box.yview(tk.END)
+        # Ignora mensagens de digitação do próprio usuário
+        if not ("está digitando..." in message and message.startswith(username)) and \
+           not ("parou de digitar." in message and message.startswith(username)):
+            chat_box.config(state=tk.NORMAL)
+            tag = 'self' if message.startswith(f"Inspetor(a) {username}") else 'other'
+            chat_box.insert(tk.END, message + '\n', tag)
+            chat_box.config(state=tk.DISABLED)
+            chat_box.yview(tk.END)
 
 def send_message(event=None):
     message = message_entry.get()
-    entry_field.delete(0, tk.END)
     if message:
         formatted_message = f"Inspetor(a) {username}: {message}"
         client.send(formatted_message)
+        message_entry.set("")
         stop_typing()
 
 def on_typing(event=None):
-    global TYPING_TIMER
+    global TYPING_TIMER, TYPING_STATE
+    
+    # Ignora teclas de navegação (setas, shift, etc)
+    if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 
+                       'Alt_L', 'Alt_R', 'Up', 'Down', 'Left', 'Right']:
+        return
+    
+    if not TYPING_STATE:
+        TYPING_STATE = True
+        client.send(f"{username} está digitando...")
+    
+    # Reinicia o timer a cada tecla pressionada
     if TYPING_TIMER:
         root.after_cancel(TYPING_TIMER)
-    try:
-        client.send(f"{username} está digitando...")
-    except:
-        pass
-    TYPING_TIMER = root.after(1000, stop_typing)
+    
+    TYPING_TIMER = root.after(1500, stop_typing)
 
 def stop_typing(event=None):
-    global TYPING_TIMER
-    TYPING_TIMER = None
-    try:
-        client.send(f"{username} stopped typing.")
-    except:
-        pass
+    global TYPING_TIMER, TYPING_STATE
+    
+    if TYPING_STATE:
+        TYPING_STATE = False
+        client.send(f"{username} parou de digitar.")
+    
+    if TYPING_TIMER:
+        root.after_cancel(TYPING_TIMER)
+        TYPING_TIMER = None
 
 def configure_styles():
     style = ttk.Style()

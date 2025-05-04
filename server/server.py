@@ -48,7 +48,7 @@ def handle_client(client):
 def remove_client(client):
     if client in clients: clients.remove(client)
     if client in usernames:
-        broadcast(f"{usernames[client]} has left.".encode(ENCODING))
+        broadcast(f"{usernames[client]} saiu.".encode(ENCODING))
         del usernames[client]
 
 def main():
