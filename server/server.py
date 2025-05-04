@@ -1,15 +1,17 @@
-
-from shared.configs import HOST, PORT, BUFFER_SIZE, ENCODING
 import socket, threading
+
+HOST = 'localhost'
+PORT = 12345
+BUFFER_SIZE = 1024
+ENCODING = 'utf-8'
 
 clients = []
 usernames = {}
 
 def broadcast(message, sender=None):
     for client in clients:
-        if client != sender:
-            try: client.send(message)
-            except: remove_client(client)
+        try: client.send(message)
+        except: remove_client(client)
 
 def send_private_message(target_username, message):
     for client, name in usernames.items():
@@ -24,7 +26,7 @@ def handle_client(client):
         username = client.recv(BUFFER_SIZE).decode(ENCODING)
         usernames[client] = username
         clients.append(client)
-        broadcast(f"{username} has joined the chat!".encode(ENCODING))
+        broadcast(f"{username} entrou no chat!".encode(ENCODING))
 
         while True:
             message = client.recv(BUFFER_SIZE).decode(ENCODING)
@@ -40,12 +42,13 @@ def handle_client(client):
             else:
                 broadcast(message.encode(ENCODING), client)
     except:
+        print(f"Erro ao lidar com o cliente {usernames.get(client, 'Unknown')}: {e}")
         remove_client(client)
 
 def remove_client(client):
     if client in clients: clients.remove(client)
     if client in usernames:
-        broadcast(f"{usernames[client]} has left.".encode(ENCODING))
+        broadcast(f"{usernames[client]} saiu.".encode(ENCODING))
         del usernames[client]
 
 def main():
