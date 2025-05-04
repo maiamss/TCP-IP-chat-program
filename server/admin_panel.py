@@ -51,11 +51,10 @@ def list_users():
 
 def on_receive(msg):
     if "está digitando..." in msg or "parou de digitar." in msg:
-        # Mostra apenas mensagens de outros usuários, não do admin
         if not msg.startswith("admin"):
             typing_status_label.config(text=msg if "está digitando" in msg else "")
         return
-    
+
     if "[PRIVADO]" in msg:
         chat_box.tag_config('private', foreground='#2E7D32', font=('Segoe UI', 10, 'bold'))
         chat_box.config(state=tk.NORMAL)
@@ -63,7 +62,7 @@ def on_receive(msg):
     else:
         chat_box.config(state=tk.NORMAL)
         chat_box.insert(tk.END, msg + '\n')
-    
+
     chat_box.config(state=tk.DISABLED)
     chat_box.yview(tk.END)
 
@@ -80,29 +79,24 @@ def check_single_instance():
 def configure_styles():
     style = ttk.Style()
     style.theme_use('clam')
-    
-    # Configurações gerais
+
     style.configure('.', background='#E8F5E9', foreground='#1B5E20', font=('Segoe UI', 10))
-    
-    # Botões
+
     style.configure('TButton', background='#4CAF50', foreground='white', 
                    borderwidth=1, focusthickness=3, focuscolor='#4CAF50',
                    font=('Segoe UI', 10, 'bold'))
     style.map('TButton',
               background=[('active', '#388E3C'), ('pressed', '#2E7D32')],
               foreground=[('active', 'white'), ('pressed', 'white')])
-    
-    # Entradas
+
+
     style.configure('TEntry', fieldbackground='white', borderwidth=1, 
                    relief='solid', padding=5)
-    
-    # Rótulos
+
     style.configure('TLabel', background='#E8F5E9', foreground='#1B5E20')
-    
-    # Frame
+
     style.configure('TFrame', background='#E8F5E9')
 
-# Impede múltiplas instâncias
 lock_socket = check_single_instance()
 
 # === GUI Setup ===
@@ -111,17 +105,14 @@ root.title("Secretaria de Estado do Meio Ambiente - Painel Administrativo")
 root.geometry("800x600")
 root.configure(bg='#E8F5E9')
 
-# Configurar estilos
 configure_styles()
 
-# Header
 header_frame = ttk.Frame(root, style='TFrame')
 header_frame.pack(fill=tk.X, padx=10, pady=10)
 
 ttk.Label(header_frame, text="Painel Administrativo", 
           font=('Segoe UI', 16, 'bold'), style='TLabel').pack(side=tk.LEFT)
 
-# Chat area
 chat_frame = ttk.Frame(root, style='TFrame')
 chat_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
@@ -139,7 +130,6 @@ chat_box = scrolledtext.ScrolledText(
 )
 chat_box.pack(fill=tk.BOTH, expand=True)
 
-# Typing status
 typing_status_label = ttk.Label(
     root, 
     text="", 
@@ -149,11 +139,9 @@ typing_status_label = ttk.Label(
 )
 typing_status_label.pack(anchor=tk.W, padx=15)
 
-# Controls
 controls = ttk.Frame(root, style='TFrame')
 controls.pack(fill=tk.X, padx=10, pady=(0, 15))
 
-# User controls (agrupa label e entrada do usuário)
 user_controls = ttk.Frame(controls, style='TFrame')
 user_controls.pack(side=tk.LEFT)
 
@@ -168,7 +156,6 @@ user_field = ttk.Entry(
 )
 user_field.pack(side=tk.LEFT, ipady=5)
 
-# Message entry
 message_entry = tk.StringVar()
 entry = ttk.Entry(
     controls, 
@@ -178,14 +165,12 @@ entry = ttk.Entry(
 )
 entry.pack(side=tk.LEFT, padx=10, ipady=5, expand=True, fill=tk.X)
 
-# Buttons
 button_frame = ttk.Frame(controls, style='TFrame')
 button_frame.pack(side=tk.RIGHT)
 
 ttk.Button(button_frame, text="Enviar", command=send_message).pack(side=tk.LEFT, padx=5)
 ttk.Button(button_frame, text="Listar Usuários", command=list_users).pack(side=tk.LEFT, padx=5)
 
-# Footer
 footer_frame = ttk.Frame(root, style='TFrame')
 footer_frame.pack(fill=tk.X, padx=10, pady=10)
 ttk.Label(
@@ -195,13 +180,10 @@ ttk.Label(
     font=('Segoe UI', 8)
 ).pack(side=tk.RIGHT)
 
-# Initialize client
 client = AdminClient("admin", on_receive)
 
-# Handle window close
 root.protocol("WM_DELETE_WINDOW", lambda: (client.socket.close(), root.destroy()))
 
-# Focus on entry field
 entry.focus()
 
 root.mainloop()

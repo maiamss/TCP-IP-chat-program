@@ -34,29 +34,27 @@ def send_message(event=None):
 
 def on_typing(event=None):
     global TYPING_TIMER, TYPING_STATE
-    
-    # Ignora teclas de navegação (setas, shift, etc)
+
     if event.keysym in ['Shift_L', 'Shift_R', 'Control_L', 'Control_R', 
                        'Alt_L', 'Alt_R', 'Up', 'Down', 'Left', 'Right']:
         return
-    
+
     if not TYPING_STATE:
         TYPING_STATE = True
         client.send(f"{username} está digitando...")
-    
-    # Reinicia o timer a cada tecla pressionada
+
     if TYPING_TIMER:
         root.after_cancel(TYPING_TIMER)
-    
+
     TYPING_TIMER = root.after(1500, stop_typing)
 
 def stop_typing(event=None):
     global TYPING_TIMER, TYPING_STATE
-    
+
     if TYPING_STATE:
         TYPING_STATE = False
         client.send(f"{username} parou de digitar.")
-    
+
     if TYPING_TIMER:
         root.after_cancel(TYPING_TIMER)
         TYPING_TIMER = None
@@ -64,26 +62,20 @@ def stop_typing(event=None):
 def configure_styles():
     style = ttk.Style()
     style.theme_use('clam')
-    
-    # Configurações gerais
+
     style.configure('.', background='#E8F5E9', foreground='#1B5E20', font=('Segoe UI', 10))
-    
-    # Botões
+
     style.configure('TButton', background='#4CAF50', foreground='white', 
                    borderwidth=1, focusthickness=3, focuscolor='#4CAF50',
                    font=('Segoe UI', 10, 'bold'))
     style.map('TButton',
               background=[('active', '#388E3C'), ('pressed', '#2E7D32')],
               foreground=[('active', 'white'), ('pressed', 'white')])
-    
-    # Entradas
+
     style.configure('TEntry', fieldbackground='white', borderwidth=1, 
                    relief='solid', padding=5)
-    
-    # Rótulos
+
     style.configure('TLabel', background='#E8F5E9', foreground='#1B5E20')
-    
-    # Frame
     style.configure('TFrame', background='#E8F5E9')
 
 # GUI Setup
@@ -93,10 +85,8 @@ root.title("Painel do Inspetor(a) - Secretaria de Meio Ambiente")
 root.geometry("700x550")
 root.configure(bg='#E8F5E9')
 
-# Configurar estilos
 configure_styles()
 
-# Header
 header_frame = ttk.Frame(root, style='TFrame', padding="10")
 header_frame.pack(fill=tk.X)
 
@@ -119,7 +109,6 @@ typing_status_label = ttk.Label(root,
                                style='TLabel')
 typing_status_label.pack(anchor=tk.W, padx=15)
 
-# Chat area
 chat_frame = ttk.Frame(root, style='TFrame')
 chat_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
@@ -144,7 +133,6 @@ chat_box.config(cursor="arrow")
 chat_box.tag_config('self', background="#E8F5E9", foreground="#1B5E20", lmargin1=10, lmargin2=10)
 chat_box.tag_config('other', background="#C8E6C9", foreground="#2E7D32", lmargin1=10, lmargin2=10)
 
-# Input area
 input_frame = ttk.Frame(root, style='TFrame', padding="15")
 input_frame.pack(fill=tk.X)
 
@@ -167,7 +155,6 @@ send_button = ttk.Button(
 )
 send_button.pack(side=tk.RIGHT, padx=10)
 
-# Footer
 footer_frame = ttk.Frame(root, style='TFrame')
 footer_frame.pack(fill=tk.X, padx=10, pady=10)
 ttk.Label(
@@ -177,7 +164,6 @@ ttk.Label(
     font=('Segoe UI', 8)
 ).pack(side=tk.RIGHT)
 
-# Username prompt
 while not username or not re.match("^[A-Za-z]{3,20}$", str(username)):
     username = simpledialog.askstring("Username", "Digite seu nome de inspetor (apenas letras, 3-20 caracteres):", parent=root)
     if username is None:
@@ -185,14 +171,12 @@ while not username or not re.match("^[A-Za-z]{3,20}$", str(username)):
         root.destroy()
         exit()
 
-# Atualiza o label do usuário após obter o username
 user_label.config(text=f"Usuário: {username}")
 
 client = ChatClient(username, on_receive)
 root.deiconify()
 root.protocol("WM_DELETE_WINDOW", lambda: (client.close(), root.quit()))
 
-# Focus no campo de mensagem ao iniciar
 entry_field.focus()
 
 root.mainloop()
