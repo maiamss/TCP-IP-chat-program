@@ -23,7 +23,7 @@ Aplicativo de chat em Python com interface gráfica para usuários e painel admi
 git clone https://github.com/maiamss/TCP-IP-chat-program.git
 ```
 
-1. Inicie o servidor:
+2. Inicie o servidor:
 
    ```
    python3 -m server.server
