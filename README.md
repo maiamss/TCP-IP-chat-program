@@ -1,4 +1,4 @@
-# Chat App com Painel Admin
+Chat App com Painel Admin
 
 Aplicativo de chat em Python com interface gráfica para usuários e painel administrativo.
 
@@ -15,11 +15,9 @@ Aplicativo de chat em Python com interface gráfica para usuários e painel admi
 - Python 3.8+
 - Bibliotecas  (Tkinter, socket, threading)
 
-## Como executar este projeto
+## Como executar este projetoClone este repositório:
 
-1. Clone este repositório:
-
-   ```bash
+1. ```bash
    git clone https://github.com/maiamss/TCP-IP-chat-program.git
    cd TCP-IP-chat-program
    ```
