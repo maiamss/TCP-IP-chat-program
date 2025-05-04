@@ -22,7 +22,8 @@ class AdminClient:
                     self.socket.send(self.username.encode(ENCODING))
                 else:
                     self.on_receive_callback(msg)
-            except:
+            except Exception as e:
+                print(f"Erro ao receber mensagem.: {e}")
                 break
 
     def send(self, message):
@@ -39,7 +40,9 @@ def send_message():
     if not msg:
         return
     if user:
+        display_msg = f"[PRIVATE] para {user}: {msg}"
         client.send(f"/admin:msg {user} {msg}")
+        on_receive(display_msg)  # <- só mostra local se for privado
     else:
         client.send(f"[ADMIN]: {msg}")
     message_entry.set("")
@@ -74,14 +77,17 @@ root.title("Secretaria de Estado do Meio Ambiente - Painel Admin")
 root.geometry("750x500")
 
 chat_box = scrolledtext.ScrolledText(root, state=tk.DISABLED, font=("Segoe UI", 10))
-chat_box.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+chat_box.pack(fill=tk.BOTH, expand=True, padx=10, pady=(10, 10))
+
+typing_status_label = ttk.Label(root, text="", foreground="gray", font=("Segoe UI", 10))
+typing_status_label.pack(anchor=tk.W, padx=5)
 
 controls = ttk.Frame(root)
-controls.pack(fill=tk.X, padx=10)
+controls.pack(fill=tk.X, padx=10, pady=(10, 15))
 
 message_entry = tk.StringVar()
 entry = ttk.Entry(controls, textvariable=message_entry, width=40)
-entry.pack(side=tk.LEFT, padx=5)
+entry.pack(side=tk.LEFT, padx=10)
 
 user_entry = tk.StringVar()
 user_field = ttk.Entry(controls, textvariable=user_entry, width=15)

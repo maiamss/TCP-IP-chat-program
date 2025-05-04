@@ -7,9 +7,9 @@ usernames = {}
 
 def broadcast(message, sender=None):
     for client in clients:
-        if client != sender:
-            try: client.send(message)
-            except: remove_client(client)
+        print(f"Enviando para: {usernames.get(client)}") 
+        try: client.send(message)
+        except: remove_client(client)
 
 def send_private_message(target_username, message):
     for client, name in usernames.items():
@@ -24,6 +24,7 @@ def handle_client(client):
         username = client.recv(BUFFER_SIZE).decode(ENCODING)
         usernames[client] = username
         clients.append(client)
+        print(f"Clientes conectados: {[usernames.get(c) for c in clients]}")
         broadcast(f"{username} has joined the chat!".encode(ENCODING))
 
         while True:
@@ -40,6 +41,7 @@ def handle_client(client):
             else:
                 broadcast(message.encode(ENCODING), client)
     except:
+        print(f"Erro ao lidar com o cliente {usernames.get(client, 'Unknown')}: {e}")
         remove_client(client)
 
 def remove_client(client):
