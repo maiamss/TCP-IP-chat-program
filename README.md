@@ -31,7 +31,7 @@ git clone https://github.com/maiamss/TCP-IP-chat-program.git
 3. Inicie o painel admin:
 
    ```
-   python3 -m server.admin_painel
+   python3 -m server.admin_panel
    ```
 4. Inicie os clientes:
 
