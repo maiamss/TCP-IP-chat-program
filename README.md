@@ -1,4 +1,4 @@
-# Chat App com Painel Admin💬
+# Chat com Painel Admin/Client 💬
 
 Aplicação desktop em Python com interface gráfica (Tkinter) que permite a comunicação em tempo real entre inspetores ambientais por meio de mensagens via **sockets** TCP/IP. Desenvolvido com foco em integração cliente-servidor, manipulação de eventos gráficos e lógica de comunicação assíncrona.
 
