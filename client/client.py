@@ -1,6 +1,8 @@
-from shared.configs import HOST, PORT, BUFFER_SIZE, ENCODING
+from shared.configs import PORT, BUFFER_SIZE, ENCODING
 import socket
 import threading
+
+HOST = 'localhost'  # server address
 
 class ChatClient:
     def __init__(self, username, on_message_callback):

@@ -1,4 +1,4 @@
-HOST = 'localhost'
+HOST = '0.0.0.0'
 PORT = 12345
 BUFFER_SIZE = 1024
 ENCODING = 'utf-8'
