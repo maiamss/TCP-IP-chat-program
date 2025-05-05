@@ -37,13 +37,13 @@ python -m server.server
 #### 3. Execute o painel do admin:
 
 ```bash
-python server.admin_panel
+python -m server.admin_panel
 ```
 
 #### 4. Em outro terminal, execute o cliente (interface):
 
 ```bash
-python client.gui
+python -m client.gui
 ```
 
 > **Importante:** Execute o servidor primeiro para aceitar conexões dos inspetores.
