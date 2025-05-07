@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import simpledialog, messagebox, scrolledtext, ttk
 import re
 from client.client import ChatClient
+from shared.configs import PORT
 
 TYPING_TIMER = None
 TYPING_STATE = False
@@ -163,6 +164,16 @@ ttk.Label(
     font=('Segoe UI', 8)
 ).pack(side=tk.RIGHT)
 
+host = None
+while not host or not re.match(r"^[\w\.-]{3,253}$", str(host)):
+    host = simpledialog.askstring("Host", "Digite o endereço do host (ex: 127.0.0.1):", parent=root)
+    if host is None:
+        messagebox.showinfo("Encerrado", "Você cancelou a conexão. Encerrando.")
+        root.destroy()
+        exit()
+
+user_label.config(text=f"Host: {host}")
+
 while not username or not re.match("^[A-Za-z]{3,20}$", str(username)):
     username = simpledialog.askstring("Username", "Digite seu nome de inspetor (apenas letras, 3-20 caracteres):", parent=root)
     if username is None:
@@ -172,7 +183,7 @@ while not username or not re.match("^[A-Za-z]{3,20}$", str(username)):
 
 user_label.config(text=f"Usuário: {username}")
 
-client = ChatClient(username, on_receive)
+client = ChatClient(username, host, PORT, on_receive)
 root.deiconify()
 root.protocol("WM_DELETE_WINDOW", lambda: (client.close(), root.quit()))
 
