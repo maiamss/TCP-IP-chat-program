@@ -1,9 +1,5 @@
 import socket, threading
-
-HOST = 'localhost'
-PORT = 12345
-BUFFER_SIZE = 1024
-ENCODING = 'utf-8'
+from shared.configs import HOST, PORT, BUFFER_SIZE, ENCODING
 
 clients = []
 usernames = {}

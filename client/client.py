@@ -1,12 +1,14 @@
-from shared.configs import HOST, PORT, BUFFER_SIZE, ENCODING
+from shared.configs import PORT, BUFFER_SIZE, ENCODING
 import socket
 import threading
 
 class ChatClient:
-    def __init__(self, username, on_message_callback):
+    def __init__(self, username, host, port, on_message_callback):
         self.username = username
+        self.host = host
+        self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((HOST, PORT))
+        self.socket.connect((self.host, self.port))
         self.on_message_callback = on_message_callback
         self.running = True
         threading.Thread(target=self.receive, daemon=True).start()
